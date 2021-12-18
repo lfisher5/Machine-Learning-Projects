@@ -1,0 +1,203 @@
+{
+ "cells": [
+  {
+   "cell_type": "code",
+   "execution_count": 1,
+   "id": "psychological-outline",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "'''\n",
+    "Lauren Fisher\n",
+    "Assignment #1\n",
+    "Machine Learning CS424\n",
+    "Program Description: a dummy predictor which for each data scientist who has > 0 training hours \n",
+    "the model will predict they do not want to change jobs\n",
+    "'''\n",
+    "\n",
+    "import pandas as pd\n",
+    "import numpy as np\n",
+    "from sklearn.model_selection import train_test_split\n",
+    "from sklearn.metrics import classification_report"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 2,
+   "id": "norwegian-dodge",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# get the data\n",
+    "# returns data frame containing data with these features:\n",
+    "##\n",
+    "\n",
+    "# city: City code\n",
+    "\n",
+    "# city_ development _index : Developement index of the city (scaled)\n",
+    "\n",
+    "# gender: Gender of candidate\n",
+    "\n",
+    "# relevent_experience: Relevant experience of candidate\n",
+    "\n",
+    "# enrolled_university: Type of University course enrolled if any\n",
+    "\n",
+    "# education_level: Education level of candidate\n",
+    "\n",
+    "# major_discipline :Education major discipline of candidate\n",
+    "\n",
+    "# experience: Candidate total experience in years\n",
+    "\n",
+    "# company_size: No of employees in current employer's company\n",
+    "\n",
+    "# company_type : Type of current employer\n",
+    "\n",
+    "# lastnewjob: Difference in years between previous job and current job\n",
+    "\n",
+    "# training_hours: training hours completed\n",
+    "\n",
+    "# target: 0 – Not looking for job change, 1 – Looking for a job change\n",
+    "##\n",
+    "def get_data(data_file):\n",
+    "    job_data = pd.read_csv('data/aug_train.csv')\n",
+    "    job_data.reset_index(drop=True, inplace=True)\n",
+    "    return job_data\n",
+    "    "
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 3,
+   "id": "rocky-album",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "\n",
+    "##takes data frame as input\n",
+    "##returns separated data frames into train/test split with target being 'target' feature (i.e. looking for job change)\n",
+    "def create_data_sets(data):\n",
+    "    X = data[['gender', 'education_level', 'city_development_index', 'training_hours']]\n",
+    "    y = data['target']\n",
+    "    return train_test_split(X, y, test_size=0.33, random_state=42)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 4,
+   "id": "structured-concept",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "##dummy model that for reported data with training hours > 0 (all) predicts person to not want job change\n",
+    "##returns prediction array for dataset passed in\n",
+    "def create_model(data):\n",
+    "    predictions = []\n",
+    "    with open('predictions.txt', 'w') as f:\n",
+    "        for row in data.iterrows():\n",
+    "            if row[1]['training_hours'] > 0:\n",
+    "                predictions.append(0.0)\n",
+    "                print(0.0, file=f)\n",
+    "            else:\n",
+    "                predictions.append(1.0)\n",
+    "                print(1.0, file=f)\n",
+    "    return predictions\n",
+    "            "
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 5,
+   "id": "forty-toilet",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# with inputs of predictions and true target values for the test dataset\n",
+    "#prints classification report with model metrics\n",
+    "def generate_model_metrics(predictions, y_test):\n",
+    "    print(classification_report(y_test,predictions, zero_division = 0))\n",
+    "    \n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 6,
+   "id": "executed-castle",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# calls functions necessary to create and test model\n",
+    "def stupid_model_predictor():\n",
+    "    job_data_file = 'archive/aug_train.csv'\n",
+    "    job_data = get_data(job_data_file)\n",
+    "    \n",
+    "    X_train, X_test, y_train, y_test = create_data_sets(job_data)\n",
+    "    predictions = create_model(X_test)\n",
+    "    y_test.reset_index(drop=True, inplace=True)\n",
+    "    generate_model_metrics(predictions, y_test)\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 7,
+   "id": "fewer-shelter",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "              precision    recall  f1-score   support\n",
+      "\n",
+      "         0.0       0.75      1.00      0.85      4714\n",
+      "         1.0       0.00      0.00      0.00      1609\n",
+      "\n",
+      "    accuracy                           0.75      6323\n",
+      "   macro avg       0.37      0.50      0.43      6323\n",
+      "weighted avg       0.56      0.75      0.64      6323\n",
+      "\n"
+     ]
+    }
+   ],
+   "source": [
+    "stupid_model_predictor()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "short-french",
+   "metadata": {},
+   "outputs": [],
+   "source": []
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "twenty-smooth",
+   "metadata": {},
+   "outputs": [],
+   "source": []
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "Python 3 (ipykernel)",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.8.8"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 5
+}
